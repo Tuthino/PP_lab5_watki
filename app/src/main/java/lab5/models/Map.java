@@ -81,21 +81,6 @@ public class Map {
 
     // ---- Evolution ----
 
-    public void setNeighChar(Cell cell){
-        int x = cell.getX();
-        int y = cell.getY();
-            this.getCell(((x - 1 + width) % width), y).setNeighbourState(true);
-            this.getCell(((x + 1 + width) % width), y).setNeighbourState(true);
-            this.getCell(x, ((y - 1 + height) % height)).setNeighbourState(true);
-            this.getCell(x, ((y + 1 + height) % height)).setNeighbourState(true);
-            this.getCell(((x - 1 + width) % width), ((y - 1 + height) % height)).setNeighbourState(true);
-            this.getCell(((x + 1 + width) % width), ((y - 1 + height) % height)).setNeighbourState(true);
-            this.getCell(((x - 1 + width) % width), ((y + 1 + height) % height)).setNeighbourState(true);
-            this.getCell(((x + 1 + width) % width), ((y + 1 + height) % height)).setNeighbourState(true);
-        
-        }
-    
-
     public void setCellState(int x, int y, int state) {
         this.cellArray[y][x].setAliveState(state);
     }

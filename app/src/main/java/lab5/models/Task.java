@@ -4,8 +4,7 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import lab5.App;
 
-
-public class Task implements Runnable{
+public class Task implements Runnable {
     private int threadId;
     private int offset;
     private int width;
@@ -13,7 +12,6 @@ public class Task implements Runnable{
     private Map map;
 
     private CyclicBarrier barrier;
-
 
     public Task(int threadId, int offset, int width, int height, Map map, CyclicBarrier barrier) {
         this.threadId = threadId;
@@ -26,17 +24,16 @@ public class Task implements Runnable{
 
     @Override
     public void run() {
-         // perform task
-        for(int i = offset; i<width; i++){
-            for(int j = 0; j<height; j++){
+        // perform task
+        for (int i = offset; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 Cell cell = map.getCell(i, j);
-                int nextCellstate = map.nextCellstate(cell);
-                App.mainMap.setCellState(cell.getX(), cell.getY(), nextCellstate); 
-                if (nextCellstate == 1){
-                    App.mainMap.setNeighChar(cell);
+                cell.setNextCellstate(map.nextCellstate(cell));
+                // App.mainMap.setCellState(cell.getX(), cell.getY(), nextCellstate);
+                App.mainMap.getCell(cell.getX(), cell.getY()).setCharacter(Integer.toString(threadId));
+                if(cell.getNextCellstate() == 1){
+                    // System.out.println("Thread " + threadId + " changed cell " + cell.getX() + " " + cell.getY() + " to alive");
                 }
-                App.mainMap.getCell(cell.getX(),cell.getY()).setCharacter(Integer.toString(threadId));
-                // System.out.println("Thread " + threadId + " is updating cell " + i + " " + j);
             }
         }
         try {
@@ -44,19 +41,20 @@ public class Task implements Runnable{
         } catch (InterruptedException | BrokenBarrierException e) {
             e.printStackTrace();
         }
+
+        for (int i = offset; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                Cell cell = map.getCell(i, j);
+                cell.setAliveState(cell.getNextCellstate());
+                App.mainMap.setCellState(cell.getX(), cell.getY(), cell.isAlive());
+            }
+        }
+
     }
 
     public Map getMap() {
         return map;
     }
-
-
-    // public 
-    // for(int i = offset; i<width; i++){
-    //     for(int j = 0; j<height; j++){
-    //         if(cellArray)
-    //     }
-    // }
 
     public int getThreadId() {
         return threadId;
@@ -69,5 +67,5 @@ public class Task implements Runnable{
     public int getWidth() {
         return width;
     }
-    
+
 }

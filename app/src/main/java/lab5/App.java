@@ -37,16 +37,14 @@ public class App {
             CyclicBarrier barrier = new CyclicBarrier(threadsNum, new Runnable() {
                 @Override
                 public void run() {
+                    System.out.println("Test");
                 }
             });
 
-            
             runThreads(currentMap, threadsNum, width, height, barrier);
             mainMap.printMap();
             // mainMap.printTestMap();
-            System.out.println("Iteration finished");
-
-            
+            // System.out.println("Iteration finished");
 
         }
 
@@ -64,15 +62,16 @@ public class App {
             Thread thread = new Thread(new Task(i, offset, end, height, threadMap, barrier));
             thread.start();
             threads.add(thread);
-            
+
         }
         for (Thread thread : threads) {
-                try {
-                    thread.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            try {
+                thread.join();
+                System.out.println(thread.getName() + " joined");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+        }
     }
     // for (int iteration = 0; i < num_of_iterations;i++){
 
