@@ -29,10 +29,7 @@ public class Task implements Runnable {
             for (int j = 0; j < height; j++) {
                 Cell cell = map.getCell(i, j);
                 cell.setNextCellstate(map.nextCellstate(cell));
-                // App.mainMap.setCellState(cell.getX(), cell.getY(), nextCellstate);
-                App.mainMap.getCell(cell.getX(), cell.getY()).setCharacter(Integer.toString(threadId));
-                if(cell.getNextCellstate() == 1){
-                    // System.out.println("Thread " + threadId + " changed cell " + cell.getX() + " " + cell.getY() + " to alive");
+                if (cell.getNextCellstate() == 1) {
                 }
             }
         }

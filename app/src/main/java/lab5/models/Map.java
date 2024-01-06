@@ -113,14 +113,4 @@ public class Map {
             System.out.println();
         }
     }
-
-    public void printTestMap() {
-        Cell[][] cellArray = this.getCellArray();
-        for (int i = 0; i < this.getHeight(); i++) {
-            for (int j = 0; j < this.getWidth(); j++) {
-                System.out.print(cellArray[i][j].getCharacter());
-            }
-            System.out.println();
-        }
-    }
 }

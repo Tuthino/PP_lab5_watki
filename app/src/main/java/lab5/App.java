@@ -43,9 +43,6 @@ public class App {
 
             runThreads(currentMap, threadsNum, width, height, barrier);
             mainMap.printMap();
-            // mainMap.printTestMap();
-            // System.out.println("Iteration finished");
-
         }
 
     }
@@ -70,57 +67,14 @@ public class App {
         for (Thread thread : threads) {
             try {
                 thread.join();
-                // System.out.println(thread.getName() + " joined");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
         for (Task task : tasks) {
-            System.out.println("tid " + task.getThreadId() + ": rows: " + task.getOffset() + ":" + task.getWidth() + " (" + (task.getWidth() - task.getOffset()) + ") cols: 0:" + task.getHeight() + " (" + task.getHeight() + ")");
+            System.out.println("tid " + task.getThreadId() + ": rows: " + task.getOffset() + ":" + task.getWidth()
+                    + " (" + (task.getWidth() - task.getOffset()) + ") cols: 0:" + task.getHeight() + " ("
+                    + task.getHeight() + ")");
         }
     }
-    // for (int iteration = 0; i < num_of_iterations;i++){
-
-    // }
-
-    // }
-
-    // private static void runSimulation(Map map, int num_of_iterations, int
-    // threadsNum) {
-    // int width = map.getWidth();
-    // int height = map.getHeight();
-    // Cell[][] cellArray = map.getCellArray();
-    // for (int i = 0; i < num_of_iterations; i++) {
-    // for (int j = 0; j < threadsNum; j++) {
-    // int offset = j * (width / threadsNum);
-    // int end = (j + 1) * (width / threadsNum);
-    // if (j == threadsNum - 1) {
-    // end = width;
-    // }
-    // Thread thread = new Thread(new MyThread(j, offset, end, height, cellArray));
-    // thread.start();
-    // try {
-    // thread.join();
-    // } catch (InterruptedException e) {
-    // e.printStackTrace();
-    // }
-    // }
-    // for (int j = 0; j < threadsNum; j++) {
-    // int offset = j * (width / threadsNum);
-    // int end = (j + 1) * (width / threadsNum);
-    // if (j == threadsNum - 1) {
-    // end = width;
-    // }
-    // Thread thread = new Thread(new MyThread(j, offset, end, height, cellArray));
-    // thread.start();
-    // try {
-    // thread.join();
-    // } catch (InterruptedException e) {
-    // e.printStackTrace();
-    // }
-    // }
-    // printMap(map);
-    // }
-    // }
-
 }
