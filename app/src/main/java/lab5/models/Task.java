@@ -10,16 +10,17 @@ public class Task implements Runnable{
     private int offset;
     private int width;
     private int height;
-    private Cell[][] cellArray;
+    private Map map;
+
     private CyclicBarrier barrier;
 
 
-    public Task(int threadId, int offset, int width, int height, Cell[][] cellArray, CyclicBarrier barrier) {
+    public Task(int threadId, int offset, int width, int height, Map map, CyclicBarrier barrier) {
         this.threadId = threadId;
         this.offset = offset;
         this.width = width;
         this.height = height;
-        this.cellArray = cellArray;
+        this.map = map;
         this.barrier = barrier;
     }
 
@@ -28,7 +29,13 @@ public class Task implements Runnable{
          // perform task
         for(int i = offset; i<width; i++){
             for(int j = 0; j<height; j++){
-                App.updatedMap.getCell(i,j).setCharacter(Integer.toString(threadId));
+                Cell cell = map.getCell(i, j);
+                int nextCellstate = map.nextCellstate(cell);
+                App.mainMap.setCellState(cell.getX(), cell.getY(), nextCellstate); 
+                if (nextCellstate == 1){
+                    App.mainMap.setNeighChar(cell);
+                }
+                App.mainMap.getCell(cell.getX(),cell.getY()).setCharacter(Integer.toString(threadId));
                 // System.out.println("Thread " + threadId + " is updating cell " + i + " " + j);
             }
         }
@@ -37,6 +44,10 @@ public class Task implements Runnable{
         } catch (InterruptedException | BrokenBarrierException e) {
             e.printStackTrace();
         }
+    }
+
+    public Map getMap() {
+        return map;
     }
 
 

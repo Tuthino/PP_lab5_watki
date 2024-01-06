@@ -1,23 +1,34 @@
 package lab5.models;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
 
 public class Map {
     int width;
     int height;
     Cell[][] cellArray;
 
+    public Map(Map map) {
+        this.width = map.getWidth();
+        this.height = map.getHeight();
+        this.cellArray = new Cell[this.width][this.height];
+        for (int i = 0; i < this.width; i++) {
+            for (int j = 0; j < this.height; j++) {
+                this.cellArray[j][i] = new Cell(map.getCell(i, j));
+            }
+        }
+    }
+
     public Map(int width, int height) {
         this.width = width;
         this.height = height;
         this.cellArray = initializeArray();
-    } 
+    }
 
     private Cell[][] initializeArray() {
         Cell[][] cellArray = new Cell[this.width][this.height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                cellArray[i][j] = new Cell(i, j, false, false);
+                cellArray[i][j] = new Cell(j, i, 0);
             }
         }
         return cellArray;
@@ -36,7 +47,7 @@ public class Map {
     }
 
     public Cell getCell(int x, int y) {
-        return cellArray[x][y];
+        return cellArray[y][x];
     }
 
     public Map setCellArray(Cell[][] cellArray) {
@@ -44,59 +55,73 @@ public class Map {
         return this;
     }
 
-
-
-
-    public int getNeighbours(Cell[][] cellArray, int x, int y, int width, int height) {
+    public int getNeighbours(int x, int y, int width, int height) {
         int aliveNeighbours = 0;
-        //left
-        aliveNeighbours += this.getCell(((x - 1 + width) % width),y).setNeighbourState(state);
+        // left
+        aliveNeighbours += this.getCell(((x - 1 + width) % width), y).isAlive();
+        // right
+        aliveNeighbours += this.getCell(((x + 1 + width) % width), y).isAlive();
+        // up
+        aliveNeighbours += this.getCell(x, ((y - 1 + height) % height)).isAlive();
+        // down
+        aliveNeighbours += this.getCell(x, ((y + 1 + height) % height)).isAlive();
+        // up left
+        aliveNeighbours += this.getCell(((x - 1 + width) % width), ((y - 1 + height) % height)).isAlive();
 
-        //right
-        aliveNeighbours += this.getCell(( (x + 1 + width) % width), y).setNeighbourState(state);
-        //up
-        aliveNeighbours += this.getCell(x,( (y - 1 + height) % height)).setNeighbourState(state);
-        //down
-        aliveNeighbours += this.getCell( x, ((y + 1 + height) % height)).setNeighbourState(state);
-        //up left
-        aliveNeighbours += this.getCell(( (x - 1 + width) % width), ((y - 1 + height) % height)).setNeighbourState(state);
-        //up right
-        aliveNeighbours += this.getCell(( (x + 1 + width) % width),((y - 1 + height) % height)).setNeighbourState(state);
-        //down left
-        aliveNeighbours += this.getCell(( (x - 1 + width) % width),((y + 1 + height) % height)).setNeighbourState(state);
-        //down right
-        aliveNeighbours += this.getCell(( (x + 1 + width) % width),((y + 1 + height) % height)).setNeighbourState(state);        
-    
+        // up right
+        aliveNeighbours += this.getCell(((x + 1 + width) % width), ((y - 1 + height) % height)).isAlive();
+
+        // down left
+        aliveNeighbours += this.getCell(((x - 1 + width) % width), ((y + 1 + height) % height)).isAlive();
+        // down right
+        aliveNeighbours += this.getCell(((x + 1 + width) % width), ((y + 1 + height) % height)).isAlive();
+
+        return aliveNeighbours;
     }
 
     // ---- Evolution ----
 
-    public boolean willBeAlive(Cell cell) {
-        int aliveNeighbours = 0;
-        if (cell.isNeighbour()) {
-            aliveNeighbours++;
+    public void setNeighChar(Cell cell){
+        int x = cell.getX();
+        int y = cell.getY();
+            this.getCell(((x - 1 + width) % width), y).setNeighbourState(true);
+            this.getCell(((x + 1 + width) % width), y).setNeighbourState(true);
+            this.getCell(x, ((y - 1 + height) % height)).setNeighbourState(true);
+            this.getCell(x, ((y + 1 + height) % height)).setNeighbourState(true);
+            this.getCell(((x - 1 + width) % width), ((y - 1 + height) % height)).setNeighbourState(true);
+            this.getCell(((x + 1 + width) % width), ((y - 1 + height) % height)).setNeighbourState(true);
+            this.getCell(((x - 1 + width) % width), ((y + 1 + height) % height)).setNeighbourState(true);
+            this.getCell(((x + 1 + width) % width), ((y + 1 + height) % height)).setNeighbourState(true);
+        
         }
-        if (cell.isAlive()) {
-            aliveNeighbours++;
-        }
-        if (aliveNeighbours == 3) {
-            return true;
-        } else if (aliveNeighbours == 2 && cell.isAlive()) {
-            return true;
+    
+
+    public void setCellState(int x, int y, int state) {
+        this.cellArray[y][x].setAliveState(state);
+    }
+
+    public int nextCellstate(Cell cell) {
+        int aliveNeighbours = getNeighbours(cell.getX(), cell.getY(), this.getWidth(), this.getHeight());
+        if (cell.isAlive() == 1) {
+            if (aliveNeighbours == 2 || aliveNeighbours == 3) {
+                return 1;
+            } else {
+                return 0;
+            }
         } else {
-            return false;
+            if (aliveNeighbours == 3) {
+                return 1;
+            } else {
+                return 0;
+            }
         }
     }
 
-
     // ---- END Evolution ----
-
-
-
 
     public void printMap() {
         Cell[][] cellArray = this.getCellArray();
-        for (int i = 0; i < this.getHeight() ; i++) {
+        for (int i = 0; i < this.getHeight(); i++) {
             for (int j = 0; j < this.getWidth(); j++) {
                 System.out.print(cellArray[i][j].getSymbol());
             }
@@ -104,13 +129,9 @@ public class Map {
         }
     }
 
-
-
-
-
     public void printTestMap() {
         Cell[][] cellArray = this.getCellArray();
-        for (int i = 0; i < this.getHeight() ; i++) {
+        for (int i = 0; i < this.getHeight(); i++) {
             for (int j = 0; j < this.getWidth(); j++) {
                 System.out.print(cellArray[i][j].getCharacter());
             }

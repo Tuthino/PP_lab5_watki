@@ -60,11 +60,7 @@ public class InputParser {
             int y = Integer.parseInt(temp[1]);
 
             // Setting alive state
-            cellArray[x][y].setAliveState(true);
-
-            // Setting neighbours
-            map.setNeighboursState(cellArray, x, y, width, height,true);
-
+            cellArray[y][x].setAliveState(1);
         }
 
         map = map.setCellArray(cellArray);
