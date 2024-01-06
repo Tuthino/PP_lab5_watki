@@ -1,6 +1,5 @@
 package lab5.models;
 
-import java.util.ArrayList;
 
 public class Map {
     int width;
@@ -67,10 +66,8 @@ public class Map {
         aliveNeighbours += this.getCell(x, ((y + 1 + height) % height)).isAlive();
         // up left
         aliveNeighbours += this.getCell(((x - 1 + width) % width), ((y - 1 + height) % height)).isAlive();
-
         // up right
         aliveNeighbours += this.getCell(((x + 1 + width) % width), ((y - 1 + height) % height)).isAlive();
-
         // down left
         aliveNeighbours += this.getCell(((x - 1 + width) % width), ((y + 1 + height) % height)).isAlive();
         // down right

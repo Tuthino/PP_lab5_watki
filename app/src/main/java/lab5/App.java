@@ -4,8 +4,6 @@
 package lab5;
 
 import lab5.models.Map;
-import java.util.Arrays;
-import lab5.models.Cell;
 import lab5.models.Task;
 import java.util.ArrayList;
 import java.util.concurrent.CyclicBarrier;
@@ -37,12 +35,12 @@ public class App {
             CyclicBarrier barrier = new CyclicBarrier(threadsNum, new Runnable() {
                 @Override
                 public void run() {
-                    System.out.println("Test");
+                    mainMap.printMap();
+
                 }
             });
 
             runThreads(currentMap, threadsNum, width, height, barrier);
-            mainMap.printMap();
         }
 
     }
