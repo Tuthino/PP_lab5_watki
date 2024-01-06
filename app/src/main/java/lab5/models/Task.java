@@ -68,4 +68,8 @@ public class Task implements Runnable {
         return width;
     }
 
+    public int getHeight() {
+        return height;
+    }
+
 }

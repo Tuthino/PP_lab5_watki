@@ -17,7 +17,7 @@ public class App {
         // String filePath = args[0];
         int num_of_iterations;
 
-        int threadsNum = 4;
+        int threadsNum = 8;
 
         String filePath = "/home/reyio/Programming/PWR/Programowanie/lab5/app/src/main/resources/input";
         InputParser parser = new InputParser(filePath);
@@ -52,6 +52,7 @@ public class App {
 
     private static void runThreads(Map currentMap, int threadsNum, int width, int height, CyclicBarrier barrier) {
         ArrayList<Thread> threads = new ArrayList<>();
+        ArrayList<Task> tasks = new ArrayList<>();
         for (int i = 0; i < threadsNum; i++) {
             int offset = i * (width / threadsNum);
             int end = (i + 1) * (width / threadsNum);
@@ -59,18 +60,23 @@ public class App {
                 end = width;
             }
             Map threadMap = new Map(currentMap);
-            Thread thread = new Thread(new Task(i, offset, end, height, threadMap, barrier));
+            Task task = new Task(i, offset, end, height, threadMap, barrier);
+            Thread thread = new Thread(task);
             thread.start();
             threads.add(thread);
+            tasks.add(task);
 
         }
         for (Thread thread : threads) {
             try {
                 thread.join();
-                System.out.println(thread.getName() + " joined");
+                // System.out.println(thread.getName() + " joined");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+        for (Task task : tasks) {
+            System.out.println("tid " + task.getThreadId() + ": rows: " + task.getOffset() + ":" + task.getWidth() + " (" + (task.getWidth() - task.getOffset()) + ") cols: 0:" + task.getHeight() + " (" + task.getHeight() + ")");
         }
     }
     // for (int iteration = 0; i < num_of_iterations;i++){
